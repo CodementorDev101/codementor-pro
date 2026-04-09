@@ -79,10 +79,12 @@ app.listen(PORT, async () => {
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log('='.repeat(50));
   
-  // Test database connection
+// Test database connection and sync tables
   try {
     await sequelize.authenticate();
     console.log('✅ Database connected successfully');
+    await sequelize.sync({ alter: true });
+    console.log('✅ Database tables synced successfully');
   } catch (error) {
     console.error('❌ Database connection failed:', error.message);
   }
