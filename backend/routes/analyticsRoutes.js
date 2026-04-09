@@ -1,0 +1,33 @@
+const express = require('express');
+const router = express.Router();
+const { authenticate, authorizeAdmin } = require('../middleware/authMiddleware');
+const analyticsController = require('../controllers/analyticsController');
+
+// All analytics routes require authentication and admin authorization
+// Some routes can also be accessed by instructors (we'll add that later if needed)
+
+// Get overall platform statistics
+router.get('/overall-stats', authenticate, authorizeAdmin, analyticsController.getOverallStats);
+
+// Get exercise completion rates
+router.get('/exercise-completion-rates', authenticate, authorizeAdmin, analyticsController.getExerciseCompletionRates);
+
+// Get most difficult exercises
+router.get('/most-difficult-exercises', authenticate, authorizeAdmin, analyticsController.getMostDifficultExercises);
+
+// Get most popular exercises
+router.get('/most-popular-exercises', authenticate, authorizeAdmin, analyticsController.getMostPopularExercises);
+
+// Get student performance overview
+router.get('/student-performance', authenticate, authorizeAdmin, analyticsController.getStudentPerformance);
+
+// Get submissions trend over time
+router.get('/submissions-trend', authenticate, authorizeAdmin, analyticsController.getSubmissionsTrend);
+
+// Get language distribution
+router.get('/language-distribution', authenticate, authorizeAdmin, analyticsController.getLanguageDistribution);
+
+// Get difficulty distribution
+router.get('/difficulty-distribution', authenticate, authorizeAdmin, analyticsController.getDifficultyDistribution);
+
+module.exports = router;
