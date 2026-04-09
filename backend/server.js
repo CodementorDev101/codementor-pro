@@ -20,7 +20,12 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: [
+    'https://codementorpro.codes',
+    'https://www.codementorpro.codes',
+    'https://balanced-heart-production-e0bd.up.railway.app',
+    'http://localhost:5173'
+  ],
   credentials: true
 }));
 app.use(express.json());
@@ -78,8 +83,8 @@ app.listen(PORT, async () => {
   console.log(`📍 http://localhost:${PORT}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log('='.repeat(50));
-  
-// Test database connection and sync tables
+
+  // Test database connection and sync tables
   try {
     await sequelize.authenticate();
     console.log('✅ Database connected successfully');
