@@ -171,7 +171,7 @@ const login = async (req, res) => {
     if (user.role === 'instructor' && user.status === 'rejected') {
       return res.status(403).json({
         success: false,
-        message: 'Your instructor account has been rejected. Please contact the administrator.'
+        message: 'Your instructor account has been rejected. Please register again with updated credentials or contact admin2@gmail.com for assistance.'
       });
     }
 
