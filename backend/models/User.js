@@ -35,6 +35,31 @@ const User = sequelize.define('User', {
   status: {
     type: DataTypes.ENUM('pending', 'approved', 'rejected'),
     defaultValue: 'approved'
+  },
+  // Instructor credential fields
+  institution: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  department: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  position: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  employee_id: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  reason: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  valid_id_image: {
+    type: DataTypes.TEXT('long'),
+    allowNull: true
   }
 }, {
   tableName: 'users',
@@ -55,7 +80,7 @@ const User = sequelize.define('User', {
   }
 });
 
-User.prototype.comparePassword = async function(candidatePassword) {
+User.prototype.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 

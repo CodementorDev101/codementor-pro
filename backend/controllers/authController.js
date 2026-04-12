@@ -7,14 +7,34 @@ const { User } = require('../models');
  */
 const register = async (req, res) => {
   try {
-    const { email, password, first_name, last_name, role } = req.body;
+    const {
+      email, password, first_name, last_name, role,
+      institution, department, position, employee_id, reason, valid_id_image
+    } = req.body;
 
-    // Validate input
+    // Validate basic fields
     if (!email || !password || !first_name || !last_name) {
       return res.status(400).json({
         success: false,
         message: 'Please provide all required fields.'
       });
+    }
+
+    // Validate instructor-specific fields
+    const assignedRole = role || 'student';
+    if (assignedRole === 'instructor') {
+      if (!institution || !department || !position || !employee_id || !reason) {
+        return res.status(400).json({
+          success: false,
+          message: 'Please provide all required instructor credentials.'
+        });
+      }
+      if (!valid_id_image) {
+        return res.status(400).json({
+          success: false,
+          message: 'Please upload a valid ID image.'
+        });
+      }
     }
 
     // Check if user already exists
@@ -27,7 +47,6 @@ const register = async (req, res) => {
     }
 
     // Instructors need admin approval, everyone else is auto-approved
-    const assignedRole = role || 'student';
     const assignedStatus = assignedRole === 'instructor' ? 'pending' : 'approved';
 
     // Create user
@@ -37,7 +56,14 @@ const register = async (req, res) => {
       first_name,
       last_name,
       role: assignedRole,
-      status: assignedStatus
+      status: assignedStatus,
+      // Instructor credential fields (null for students)
+      institution: assignedRole === 'instructor' ? institution : null,
+      department: assignedRole === 'instructor' ? department : null,
+      position: assignedRole === 'instructor' ? position : null,
+      employee_id: assignedRole === 'instructor' ? employee_id : null,
+      reason: assignedRole === 'instructor' ? reason : null,
+      valid_id_image: assignedRole === 'instructor' ? valid_id_image : null
     });
 
     // If instructor, don't give token yet — they need approval first
@@ -107,11 +133,11 @@ const login = async (req, res) => {
     }
 
     // Explicitly include password and status fields
-    const user = await User.findOne({ 
+    const user = await User.findOne({
       where: { email },
       attributes: { include: ['password', 'status'] }
     });
-    
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -123,7 +149,7 @@ const login = async (req, res) => {
 
     // Use bcrypt.compare directly
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    
+
     console.log('Password valid:', isPasswordValid);
 
     if (!isPasswordValid) {
