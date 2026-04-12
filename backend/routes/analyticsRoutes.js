@@ -3,9 +3,6 @@ const router = express.Router();
 const { authenticate, authorizeAdmin } = require('../middleware/authMiddleware');
 const analyticsController = require('../controllers/analyticsController');
 
-// All analytics routes require authentication and admin authorization
-// Some routes can also be accessed by instructors (we'll add that later if needed)
-
 // Get overall platform statistics
 router.get('/overall-stats', authenticate, authorizeAdmin, analyticsController.getOverallStats);
 
@@ -29,5 +26,8 @@ router.get('/language-distribution', authenticate, authorizeAdmin, analyticsCont
 
 // Get difficulty distribution
 router.get('/difficulty-distribution', authenticate, authorizeAdmin, analyticsController.getDifficultyDistribution);
+
+// Public stats — no auth required (for landing page)
+router.get('/public-stats', analyticsController.getPublicStats);
 
 module.exports = router;
