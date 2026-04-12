@@ -6,10 +6,8 @@ exports.getAllUsers = async (req, res) => {
   try {
     const { search, role } = req.query;
 
-    // Build where clause
     const where = {};
 
-    // Add search filter (first_name, last_name, or email)
     if (search) {
       const { Op } = require('sequelize');
       where[Op.or] = [
@@ -19,25 +17,34 @@ exports.getAllUsers = async (req, res) => {
       ];
     }
 
-    // Add role filter
     if (role && role !== 'all') {
       where.role = role;
     }
 
     const users = await User.findAll({
       where,
-      attributes: ['id', 'first_name', 'last_name', 'email', 'role', 'status', 'created_at'],
+      attributes: [
+        'id', 'first_name', 'last_name', 'email', 'role', 'status', 'created_at',
+        // Instructor credential fields
+        'institution', 'department', 'position', 'employee_id', 'reason', 'valid_id_image'
+      ],
       order: [['created_at', 'DESC']]
     });
 
-    // Transform data to include full name
     const usersWithName = users.map(user => ({
       id: user.id,
       name: `${user.first_name} ${user.last_name}`,
       email: user.email,
       role: user.role,
       status: user.status,
-      createdAt: user.created_at
+      createdAt: user.created_at,
+      // Include credential fields
+      institution: user.institution,
+      department: user.department,
+      position: user.position,
+      employee_id: user.employee_id,
+      reason: user.reason,
+      valid_id_image: user.valid_id_image
     }));
 
     res.json({
@@ -59,7 +66,6 @@ exports.updateUser = async (req, res) => {
     const { id } = req.params;
     const { name, email, role, password, status } = req.body;
 
-    // Check if user exists
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({
@@ -68,7 +74,6 @@ exports.updateUser = async (req, res) => {
       });
     }
 
-    // Prevent admin from demoting themselves
     if (user.id === req.user.id && role !== 'admin') {
       return res.status(400).json({
         success: false,
@@ -76,7 +81,6 @@ exports.updateUser = async (req, res) => {
       });
     }
 
-    // Check if email is already taken by another user
     if (email && email !== user.email) {
       const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
@@ -87,7 +91,6 @@ exports.updateUser = async (req, res) => {
       }
     }
 
-    // Update name (split into first_name and last_name if provided)
     if (name) {
       const nameParts = name.trim().split(' ');
       user.first_name = nameParts[0];
@@ -97,12 +100,10 @@ exports.updateUser = async (req, res) => {
     user.email = email || user.email;
     user.role = role || user.role;
 
-    // ✅ NEW: Update status if provided (for approve/reject)
     if (status) {
       user.status = status;
     }
 
-    // Update password if provided
     if (password && password.trim() !== '') {
       const hashedPassword = await bcrypt.hash(password, 10);
       user.password = hashedPassword;
@@ -136,7 +137,6 @@ exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Check if user exists
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({
@@ -145,7 +145,6 @@ exports.deleteUser = async (req, res) => {
       });
     }
 
-    // Prevent admin from deleting themselves
     if (user.id === req.user.id) {
       return res.status(400).json({
         success: false,
@@ -153,11 +152,9 @@ exports.deleteUser = async (req, res) => {
       });
     }
 
-    // Get related data counts for information
     const exerciseCount = await Exercise.count({ where: { created_by: id } });
     const submissionCount = await Submission.count({ where: { user_id: id } });
 
-    // Delete user (this will cascade delete related submissions)
     await user.destroy();
 
     res.json({
