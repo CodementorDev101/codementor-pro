@@ -1,20 +1,22 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 // Welcome email after registration
 const sendWelcomeEmail = async (toEmail, name) => {
-    await transporter.sendMail({
-        from: `"CodeMentor+ Pro" <${process.env.EMAIL_USER}>`,
-        to: toEmail,
-        subject: 'Welcome to CodeMentor+ Pro!',
-        html: `
+  await transporter.sendMail({
+    from: `"CodeMentor+ Pro" <${process.env.EMAIL_USER}>`,
+    to: toEmail,
+    subject: 'Welcome to CodeMentor+ Pro!',
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0f172a; color: #ffffff; padding: 40px; border-radius: 12px;">
         <h1 style="color: #f59e0b;">Welcome to CodeMentor+ Pro! 🎉</h1>
         <p>Hi <strong>${name}</strong>,</p>
@@ -23,16 +25,16 @@ const sendWelcomeEmail = async (toEmail, name) => {
         <p style="margin-top:30px; font-size:12px; color:#94a3b8;">CodeMentor+ Pro &mdash; World Citi Colleges QC</p>
       </div>
     `,
-    });
+  });
 };
 
 // Instructor approval email
 const sendApprovalEmail = async (toEmail, name) => {
-    await transporter.sendMail({
-        from: `"CodeMentor+ Pro" <${process.env.EMAIL_USER}>`,
-        to: toEmail,
-        subject: 'Your Instructor Account Has Been Approved!',
-        html: `
+  await transporter.sendMail({
+    from: `"CodeMentor+ Pro" <${process.env.EMAIL_USER}>`,
+    to: toEmail,
+    subject: 'Your Instructor Account Has Been Approved!',
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0f172a; color: #ffffff; padding: 40px; border-radius: 12px;">
         <h1 style="color: #f59e0b;">You're Approved! ✅</h1>
         <p>Hi <strong>${name}</strong>,</p>
@@ -42,17 +44,17 @@ const sendApprovalEmail = async (toEmail, name) => {
         <p style="margin-top:30px; font-size:12px; color:#94a3b8;">CodeMentor+ Pro &mdash; World Citi Colleges QC</p>
       </div>
     `,
-    });
+  });
 };
 
 // Forgot password email
 const sendPasswordResetEmail = async (toEmail, name, resetToken) => {
-    const resetLink = `https://codementorpro.codes/reset-password?token=${resetToken}`;
-    await transporter.sendMail({
-        from: `"CodeMentor+ Pro" <${process.env.EMAIL_USER}>`,
-        to: toEmail,
-        subject: 'Password Reset Request',
-        html: `
+  const resetLink = `https://codementorpro.codes/reset-password?token=${resetToken}`;
+  await transporter.sendMail({
+    from: `"CodeMentor+ Pro" <${process.env.EMAIL_USER}>`,
+    to: toEmail,
+    subject: 'Password Reset Request',
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0f172a; color: #ffffff; padding: 40px; border-radius: 12px;">
         <h1 style="color: #f59e0b;">Password Reset 🔐</h1>
         <p>Hi <strong>${name}</strong>,</p>
@@ -62,7 +64,7 @@ const sendPasswordResetEmail = async (toEmail, name, resetToken) => {
         <p style="margin-top:30px; font-size:12px; color:#94a3b8;">CodeMentor+ Pro &mdash; World Citi Colleges QC</p>
       </div>
     `,
-    });
+  });
 };
 
 module.exports = { sendWelcomeEmail, sendApprovalEmail, sendPasswordResetEmail };
