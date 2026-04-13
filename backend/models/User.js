@@ -60,6 +60,17 @@ const User = sequelize.define('User', {
   valid_id_image: {
     type: DataTypes.TEXT('long'),
     allowNull: true
+  },
+  // Password reset fields
+  reset_token: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    defaultValue: null
+  },
+  reset_token_expires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: null
   }
 }, {
   tableName: 'users',

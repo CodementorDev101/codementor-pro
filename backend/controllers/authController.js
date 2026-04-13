@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const { User } = require('../models');
+const { sendWelcomeEmail, sendPasswordResetEmail } = require('../emailService');
 
 /**
  * Register a new user
@@ -57,7 +59,6 @@ const register = async (req, res) => {
       last_name,
       role: assignedRole,
       status: assignedStatus,
-      // Instructor credential fields (null for students)
       institution: assignedRole === 'instructor' ? institution : null,
       department: assignedRole === 'instructor' ? department : null,
       position: assignedRole === 'instructor' ? position : null,
@@ -65,6 +66,13 @@ const register = async (req, res) => {
       reason: assignedRole === 'instructor' ? reason : null,
       valid_id_image: assignedRole === 'instructor' ? valid_id_image : null
     });
+
+    // Send welcome email (non-blocking)
+    try {
+      await sendWelcomeEmail(user.email, user.first_name);
+    } catch (emailErr) {
+      console.error('Welcome email failed (non-critical):', emailErr.message);
+    }
 
     // If instructor, don't give token yet — they need approval first
     if (assignedRole === 'instructor') {
@@ -124,7 +132,6 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -132,7 +139,6 @@ const login = async (req, res) => {
       });
     }
 
-    // Explicitly include password and status fields
     const user = await User.findOne({
       where: { email },
       attributes: { include: ['password', 'status'] }
@@ -147,7 +153,6 @@ const login = async (req, res) => {
 
     console.log('Login attempt for:', user.email);
 
-    // Use bcrypt.compare directly
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     console.log('Password valid:', isPasswordValid);
@@ -159,7 +164,6 @@ const login = async (req, res) => {
       });
     }
 
-    // Block pending instructors
     if (user.role === 'instructor' && user.status === 'pending') {
       return res.status(403).json({
         success: false,
@@ -167,7 +171,6 @@ const login = async (req, res) => {
       });
     }
 
-    // Block rejected instructors
     if (user.role === 'instructor' && user.status === 'rejected') {
       return res.status(403).json({
         success: false,
@@ -175,7 +178,6 @@ const login = async (req, res) => {
       });
     }
 
-    // Generate JWT token
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
@@ -236,8 +238,122 @@ const getProfile = async (req, res) => {
   }
 };
 
+/**
+ * Forgot password - generate token and send email
+ */
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide your email address.'
+      });
+    }
+
+    const user = await User.findOne({ where: { email } });
+
+    // Always return success even if email not found (security best practice)
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message: 'If that email exists in our system, a reset link has been sent.'
+      });
+    }
+
+    // Generate secure token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    // Save token to DB
+    await user.update({
+      reset_token: resetToken,
+      reset_token_expires: resetTokenExpires
+    });
+
+    // Send reset email
+    await sendPasswordResetEmail(user.email, user.first_name, resetToken);
+
+    res.status(200).json({
+      success: true,
+      message: 'If that email exists in our system, a reset link has been sent.'
+    });
+
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to process request.',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Reset password - verify token and update password
+ */
+const resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token and new password are required.'
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters.'
+      });
+    }
+
+    const user = await User.findOne({ where: { reset_token: token } });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid or expired reset link.'
+      });
+    }
+
+    // Check if token is expired
+    if (new Date() > new Date(user.reset_token_expires)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Reset link has expired. Please request a new one.'
+      });
+    }
+
+    // Update password and clear token
+    await user.update({
+      password: newPassword,
+      reset_token: null,
+      reset_token_expires: null
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Password reset successful! You can now log in with your new password.'
+    });
+
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to reset password.',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
-  getProfile
+  getProfile,
+  forgotPassword,
+  resetPassword
 };

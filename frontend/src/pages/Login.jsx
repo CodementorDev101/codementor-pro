@@ -23,19 +23,18 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     const loginToast = toast.loading('Signing you in...');
 
     try {
       console.log('Attempting login with:', formData.email);
       const response = await api.post('/auth/login', formData);
       console.log('Login response:', response.data);
-      
-      // ✅ CRITICAL FIX: Extract from nested response structure
+
       const { token, user } = response.data.data;
       login(token, user);
       console.log('Token saved, navigating to dashboard');
-      
+
       toast.success(`Welcome back, ${user.first_name}!`, { id: loginToast });
       navigate('/dashboard');
     } catch (err) {
@@ -179,7 +178,7 @@ const Login = () => {
           </div>
 
           {/* Password Input */}
-          <div style={{ marginBottom: '32px' }}>
+          <div style={{ marginBottom: '16px' }}>
             <label style={{
               display: 'block',
               color: '#ffffff',
@@ -222,6 +221,24 @@ const Login = () => {
                 e.target.style.boxShadow = 'none';
               }}
             />
+          </div>
+
+          {/* Forgot Password Link */}
+          <div style={{ textAlign: 'right', marginBottom: '24px' }}>
+            <Link
+              to="/forgot-password"
+              style={{
+                color: '#fbbf24',
+                fontSize: '13px',
+                textDecoration: 'none',
+                fontWeight: '500',
+                transition: 'color 0.3s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.color = '#fcd34d'}
+              onMouseLeave={(e) => e.target.style.color = '#fbbf24'}
+            >
+              Forgot Password?
+            </Link>
           </div>
 
           {/* Submit Button */}

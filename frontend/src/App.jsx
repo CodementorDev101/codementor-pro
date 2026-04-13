@@ -1,10 +1,12 @@
-// ✅ UPDATED: Added Profile import and route
+// ✅ UPDATED: Added ForgotPassword and ResetPassword routes
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Toaster } from 'react-hot-toast';
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import ExerciseDetail from './pages/ExerciseDetail';
 import CreateExercise from './pages/CreateExercise';
@@ -173,10 +175,12 @@ function App() {
         <Routes>
           {/* Landing Page */}
           <Route path="/" element={<LandingPage />} />
-          
+
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Protected Routes */}
           <Route
@@ -187,7 +191,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          
+
           {/* Profile route - accessible to all authenticated users */}
           <Route
             path="/profile"
@@ -251,7 +255,7 @@ function App() {
             }
           />
 
-          {/* ✅ NEW: Instructor Dashboard Route */}
+          {/* Instructor Dashboard Route */}
           <Route
             path="/instructor-dashboard"
             element={
@@ -288,7 +292,7 @@ function App() {
           />
 
           {/* Catch all - redirect to landing */}
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

@@ -1,5 +1,6 @@
 const { User, Exercise, Submission } = require('../models');
 const bcrypt = require('bcrypt');
+const { sendApprovalEmail } = require('../emailService');
 
 // Get all users (admin only)
 exports.getAllUsers = async (req, res) => {
@@ -25,7 +26,6 @@ exports.getAllUsers = async (req, res) => {
       where,
       attributes: [
         'id', 'first_name', 'last_name', 'email', 'role', 'status', 'created_at',
-        // Instructor credential fields
         'institution', 'department', 'position', 'employee_id', 'reason', 'valid_id_image'
       ],
       order: [['created_at', 'DESC']]
@@ -38,7 +38,6 @@ exports.getAllUsers = async (req, res) => {
       role: user.role,
       status: user.status,
       createdAt: user.created_at,
-      // Include credential fields
       institution: user.institution,
       department: user.department,
       position: user.position,
@@ -91,6 +90,11 @@ exports.updateUser = async (req, res) => {
       }
     }
 
+    // Check if instructor is being approved (was pending, now approved)
+    const isBeingApproved = user.role === 'instructor'
+      && user.status === 'pending'
+      && status === 'approved';
+
     if (name) {
       const nameParts = name.trim().split(' ');
       user.first_name = nameParts[0];
@@ -110,6 +114,15 @@ exports.updateUser = async (req, res) => {
     }
 
     await user.save();
+
+    // Send approval email after saving (non-blocking)
+    if (isBeingApproved) {
+      try {
+        await sendApprovalEmail(user.email, user.first_name);
+      } catch (emailErr) {
+        console.error('Approval email failed (non-critical):', emailErr.message);
+      }
+    }
 
     res.json({
       success: true,
