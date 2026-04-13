@@ -1,22 +1,11 @@
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 2525,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Welcome email after registration
 const sendWelcomeEmail = async (toEmail, name) => {
-  await transporter.sendMail({
-    from: `"CodeMentor+ Pro" <${process.env.EMAIL_USER}>`,
+  await sgMail.send({
+    from: { email: 'codementorpluspro@gmail.com', name: 'CodeMentor+ Pro' },
     to: toEmail,
     subject: 'Welcome to CodeMentor+ Pro!',
     html: `
@@ -33,8 +22,8 @@ const sendWelcomeEmail = async (toEmail, name) => {
 
 // Instructor approval email
 const sendApprovalEmail = async (toEmail, name) => {
-  await transporter.sendMail({
-    from: `"CodeMentor+ Pro" <${process.env.EMAIL_USER}>`,
+  await sgMail.send({
+    from: { email: 'codementorpluspro@gmail.com', name: 'CodeMentor+ Pro' },
     to: toEmail,
     subject: 'Your Instructor Account Has Been Approved!',
     html: `
@@ -53,8 +42,8 @@ const sendApprovalEmail = async (toEmail, name) => {
 // Forgot password email
 const sendPasswordResetEmail = async (toEmail, name, resetToken) => {
   const resetLink = `https://codementorpro.codes/reset-password?token=${resetToken}`;
-  await transporter.sendMail({
-    from: `"CodeMentor+ Pro" <${process.env.EMAIL_USER}>`,
+  await sgMail.send({
+    from: { email: 'codementorpluspro@gmail.com', name: 'CodeMentor+ Pro' },
     to: toEmail,
     subject: 'Password Reset Request',
     html: `
