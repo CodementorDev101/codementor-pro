@@ -67,12 +67,10 @@ const register = async (req, res) => {
       valid_id_image: assignedRole === 'instructor' ? valid_id_image : null
     });
 
-    // Send welcome email (non-blocking)
-    try {
-      await sendWelcomeEmail(user.email, user.first_name);
-    } catch (emailErr) {
+    // Send welcome email (fire and forget - non-blocking)
+    sendWelcomeEmail(user.email, user.first_name).catch((emailErr) => {
       console.error('Welcome email failed (non-critical):', emailErr.message);
-    }
+    });
 
     // If instructor, don't give token yet — they need approval first
     if (assignedRole === 'instructor') {
