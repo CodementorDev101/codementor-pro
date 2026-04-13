@@ -18,7 +18,7 @@ export default function ForgotPassword() {
 
         setLoading(true);
         try {
-            await axios.post(`${API_BASE}/api/auth/forgot-password`, { email });
+            await axios.post(`${API_BASE}/auth/forgot-password`, { email });
             setSent(true);
             toast.success('Reset link sent! Check your email.');
         } catch (err) {
