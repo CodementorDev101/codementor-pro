@@ -229,10 +229,10 @@ const LandingPage = () => {
 
   // Team — no adviser
   const teamMembers = [
-    { name: 'Raphael Nival', role: 'Developer & Researcher', avatar: '👨‍💻' },
-    { name: 'Gemalyn Bilos', role: 'Developer & Researcher', avatar: '👩‍💻' },
-    { name: 'Jerome Hernaez', role: 'Developer & Researcher', avatar: '👨‍💻' },
-    { name: 'Hannah Goze', role: 'Developer & Researcher', avatar: '👩‍🎓' },
+    { name: 'Raphael Nival', role: 'Developer', avatar: '👨‍💻' },
+    { name: 'Gemalyn Bilos', role: 'Researcher', avatar: '👩‍💻' },
+    { name: 'Jerome Hernaez', role: 'Developer', avatar: '👨‍💻' },
+    { name: 'Hannah Goze', role: 'Researcher', avatar: '👩‍🎓' },
   ];
 
   const comparisonFeatures = [
