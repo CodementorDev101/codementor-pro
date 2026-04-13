@@ -109,10 +109,8 @@ exports.updateUser = async (req, res) => {
     }
 
     if (password && password.trim() !== '') {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      user.password = hashedPassword;
+      user.password = password;
     }
-
     await user.save();
 
     // Send approval email after saving (non-blocking)
