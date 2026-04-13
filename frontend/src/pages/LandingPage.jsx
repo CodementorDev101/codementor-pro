@@ -155,25 +155,37 @@ const LandingPage = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const scrollToSection = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth' }); };
 
-  // Placeholder respondents — replace with real names before defense
+  // Real respondents
   const testimonials = [
     {
-      name: "Respondent A",
+      name: "Jeff Enguas",
       role: "Information Technology Student",
       text: "The automated grading system made it very easy to check my code instantly. I liked how each test case result was shown clearly after submission.",
       avatar: "👩‍💻"
     },
     {
-      name: "Respondent B",
+      name: "Yabut Amara",
       role: "Information Technology Student",
       text: "CodeMentor+ Pro is straightforward to use. I could submit my solutions and immediately see which test cases passed or failed, which helped me improve my code.",
       avatar: "👨‍💻"
     },
     {
-      name: "Respondent C",
+      name: "Venz Belonio",
       role: "Information Technology Student",
       text: "Having exercises in multiple programming languages in one platform is very convenient. The code editor works well and the feedback is instant.",
       avatar: "👩‍🎓"
+    },
+    {
+      name: "Malic Tula",
+      role: "Information Technology Student",
+      text: "The platform is very intuitive and the exercises are well-structured. Being able to see detailed feedback on each submission really helped me learn faster.",
+      avatar: "👨‍🎓"
+    },
+    {
+      name: "Monique Roa",
+      role: "Information Technology Student",
+      text: "I appreciate how CodeMentor+ Pro supports multiple programming languages. It made practicing different languages in one place very efficient.",
+      avatar: "👩‍💻"
     }
   ];
 
