@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('');
@@ -18,7 +18,7 @@ export default function ForgotPassword() {
 
         setLoading(true);
         try {
-            await axios.post(`${API_BASE}/api/auth/forgot-password`, { email });
+            await axios.post(`${API_BASE}/auth/forgot-password`, { email });
             setSent(true);
             toast.success('Reset link sent! Check your email.');
         } catch (err) {
@@ -50,7 +50,6 @@ export default function ForgotPassword() {
                 backdropFilter: 'blur(10px)',
                 textAlign: 'center'
             }}>
-                {/* Logo */}
                 <div style={{ marginBottom: '24px' }}>
                     <span style={{ fontSize: '32px' }}>🔐</span>
                     <h1 style={{ color: '#f59e0b', fontSize: '24px', margin: '8px 0 4px' }}>
@@ -82,7 +81,6 @@ export default function ForgotPassword() {
                                 outline: 'none'
                             }}
                         />
-
                         <button
                             onClick={handleSubmit}
                             disabled={loading}

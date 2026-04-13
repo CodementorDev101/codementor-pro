@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function ResetPassword() {
     const [searchParams] = useSearchParams();
@@ -36,7 +36,7 @@ export default function ResetPassword() {
 
         setLoading(true);
         try {
-            await axios.post(`${API_BASE}/api/auth/reset-password`, { token, newPassword });
+            await axios.post(`${API_BASE}/auth/reset-password`, { token, newPassword });
             setDone(true);
             toast.success('Password reset successful!');
             setTimeout(() => navigate('/login'), 3000);
@@ -70,7 +70,6 @@ export default function ResetPassword() {
                 backdropFilter: 'blur(10px)',
                 textAlign: 'center'
             }}>
-                {/* Header */}
                 <div style={{ marginBottom: '24px' }}>
                     <span style={{ fontSize: '32px' }}>🔑</span>
                     <h1 style={{ color: '#f59e0b', fontSize: '24px', margin: '8px 0 4px' }}>
@@ -101,7 +100,6 @@ export default function ResetPassword() {
                                 outline: 'none'
                             }}
                         />
-
                         <input
                             type="password"
                             placeholder="Confirm new password"
@@ -121,7 +119,6 @@ export default function ResetPassword() {
                                 outline: 'none'
                             }}
                         />
-
                         <button
                             onClick={handleReset}
                             disabled={loading || !token}
