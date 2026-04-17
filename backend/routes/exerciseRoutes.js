@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   createExercise,
   getAllExercises,
+  getClassExercises,
   getExerciseById,
   updateExercise,
   deleteExercise
@@ -12,6 +13,7 @@ const { authorize } = require('../middleware/roleMiddleware');
 
 // Public routes - any authenticated user can view exercises
 router.get('/', authenticate, getAllExercises);
+router.get('/class/:class_id', authenticate, getClassExercises);
 router.get('/:id', authenticate, getExerciseById);
 
 // Protected routes - only instructors and admins

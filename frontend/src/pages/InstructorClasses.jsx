@@ -13,6 +13,18 @@ const InstructorClasses = () => {
     const [classDetails, setClassDetails] = useState(null);
     const [detailsLoading, setDetailsLoading] = useState(false);
 
+    // Create exercise for class
+    const [showExerciseForm, setShowExerciseForm] = useState(false);
+    const [exerciseForm, setExerciseForm] = useState({
+        title: '', description: '', difficulty: 'easy',
+        language: 'python', time_limit: 5, memory_limit: 128000,
+    });
+    const [testCases, setTestCases] = useState([
+        { input: '', expected_output: '', is_sample: true, points: 10 }
+    ]);
+    const [exerciseLoading, setExerciseLoading] = useState(false);
+    const [classExercises, setClassExercises] = useState([]);
+
     // Create class form
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [createName, setCreateName] = useState('');
@@ -59,7 +71,75 @@ const InstructorClasses = () => {
         setSelectedClass(c);
         setClassDetails(null);
         setInviteEmail('');
+        setShowExerciseForm(false);
+        setClassExercises([]);
         fetchClassDetails(c.id);
+        fetchClassExercises(c.id);
+    };
+
+    const fetchClassExercises = async (classId) => {
+        try {
+            const res = await api.get(`/exercises/class/${classId}`);
+            if (res.data.success) setClassExercises(res.data.exercises);
+        } catch {
+            setClassExercises([]);
+        }
+    };
+
+    const handleExerciseFormChange = (e) => {
+        setExerciseForm({ ...exerciseForm, [e.target.name]: e.target.value });
+    };
+
+    const handleTestCaseChange = (index, field, value) => {
+        const updated = [...testCases];
+        updated[index][field] = value;
+        setTestCases(updated);
+    };
+
+    const addTestCase = () => {
+        setTestCases([...testCases, { input: '', expected_output: '', is_sample: false, points: 10 }]);
+    };
+
+    const removeTestCase = (index) => {
+        if (testCases.length > 1) setTestCases(testCases.filter((_, i) => i !== index));
+    };
+
+    const handleCreateExercise = async () => {
+        if (!exerciseForm.title.trim() || !exerciseForm.description.trim()) {
+            toast.error('Title and description are required.'); return;
+        }
+        if (testCases.some(tc => !tc.expected_output.trim())) {
+            toast.error('All test cases must have expected output.'); return;
+        }
+        setExerciseLoading(true);
+        const t = toast.loading('Creating exercise...');
+        try {
+            await api.post('/exercises', {
+                ...exerciseForm,
+                class_id: selectedClass.id,
+                test_cases: testCases,
+            });
+            toast.success('Exercise created!', { id: t });
+            setShowExerciseForm(false);
+            setExerciseForm({ title: '', description: '', difficulty: 'easy', language: 'python', time_limit: 5, memory_limit: 128000 });
+            setTestCases([{ input: '', expected_output: '', is_sample: true, points: 10 }]);
+            fetchClassExercises(selectedClass.id);
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Failed to create exercise.', { id: t });
+        } finally {
+            setExerciseLoading(false);
+        }
+    };
+
+    const handleDeleteExercise = async (exerciseId, exerciseTitle) => {
+        if (!window.confirm(`Delete "${exerciseTitle}"? This cannot be undone.`)) return;
+        try {
+            await api.delete(`/exercises/${exerciseId}`);
+            toast.success('Exercise deleted.');
+            fetchClassExercises(selectedClass.id);
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Failed to delete exercise.');
+        }
     };
 
     const handleCreateClass = async () => {
@@ -431,6 +511,150 @@ const InstructorClasses = () => {
                                             </div>
                                         </div>
                                     )}
+
+                                    {/* Class Exercises */}
+                                    <div style={cardStyle}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                            <h3 style={{ color: '#fff', fontSize: '16px', fontWeight: '700', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <span>📝</span> Class Exercises
+                                                <span style={{ background: 'rgba(59,130,246,0.15)', color: '#3b82f6', padding: '2px 10px', borderRadius: '9999px', fontSize: '13px' }}>{classExercises.length}</span>
+                                            </h3>
+                                            <button
+                                                onClick={() => setShowExerciseForm(!showExerciseForm)}
+                                                style={{ padding: '8px 16px', background: showExerciseForm ? 'rgba(239,68,68,0.15)' : 'linear-gradient(135deg,#fbbf24,#f59e0b)', border: showExerciseForm ? '1px solid rgba(239,68,68,0.3)' : 'none', color: showExerciseForm ? '#ef4444' : '#0f172a', borderRadius: '8px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}
+                                            >
+                                                {showExerciseForm ? '✕ Cancel' : '+ Add Exercise'}
+                                            </button>
+                                        </div>
+
+                                        {/* Create Exercise Form */}
+                                        {showExerciseForm && (
+                                            <div style={{ background: 'rgba(15,23,42,0.5)', borderRadius: '14px', padding: '20px', marginBottom: '20px', border: '1px solid rgba(251,191,36,0.15)' }}>
+                                                <p style={{ color: '#fbbf24', fontWeight: '700', fontSize: '14px', margin: '0 0 16px' }}>🔒 New Private Exercise</p>
+
+                                                {/* Title */}
+                                                <div style={{ marginBottom: '12px' }}>
+                                                    <label style={{ display: 'block', color: '#fff', fontSize: '13px', fontWeight: '500', marginBottom: '6px' }}>Title *</label>
+                                                    <input name="title" value={exerciseForm.title} onChange={handleExerciseFormChange} placeholder="e.g. Fibonacci Sequence" style={{ ...inputStyle, fontSize: '13px' }} />
+                                                </div>
+
+                                                {/* Description */}
+                                                <div style={{ marginBottom: '12px' }}>
+                                                    <label style={{ display: 'block', color: '#fff', fontSize: '13px', fontWeight: '500', marginBottom: '6px' }}>Description *</label>
+                                                    <textarea name="description" value={exerciseForm.description} onChange={handleExerciseFormChange} placeholder="Describe the problem..." rows={3} style={{ ...inputStyle, resize: 'vertical', minHeight: '80px', fontFamily: 'inherit', lineHeight: '1.5', fontSize: '13px' }} />
+                                                </div>
+
+                                                {/* Difficulty & Language */}
+                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                                                    <div>
+                                                        <label style={{ display: 'block', color: '#fff', fontSize: '13px', fontWeight: '500', marginBottom: '6px' }}>Difficulty</label>
+                                                        <select name="difficulty" value={exerciseForm.difficulty} onChange={handleExerciseFormChange} style={{ ...inputStyle, cursor: 'pointer', fontSize: '13px' }}>
+                                                            <option value="easy">Easy</option>
+                                                            <option value="medium">Medium</option>
+                                                            <option value="hard">Hard</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label style={{ display: 'block', color: '#fff', fontSize: '13px', fontWeight: '500', marginBottom: '6px' }}>Language</label>
+                                                        <select name="language" value={exerciseForm.language} onChange={handleExerciseFormChange} style={{ ...inputStyle, cursor: 'pointer', fontSize: '13px' }}>
+                                                            <option value="python">Python</option>
+                                                            <option value="javascript">JavaScript</option>
+                                                            <option value="java">Java</option>
+                                                            <option value="cpp">C++</option>
+                                                            <option value="c">C</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                {/* Time & Memory */}
+                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                                                    <div>
+                                                        <label style={{ display: 'block', color: '#fff', fontSize: '13px', fontWeight: '500', marginBottom: '6px' }}>Time Limit (s)</label>
+                                                        <input type="number" name="time_limit" min="1" max="60" value={exerciseForm.time_limit} onChange={handleExerciseFormChange} style={{ ...inputStyle, fontSize: '13px' }} />
+                                                    </div>
+                                                    <div>
+                                                        <label style={{ display: 'block', color: '#fff', fontSize: '13px', fontWeight: '500', marginBottom: '6px' }}>Memory Limit (KB)</label>
+                                                        <input type="number" name="memory_limit" min="1000" step="1000" value={exerciseForm.memory_limit} onChange={handleExerciseFormChange} style={{ ...inputStyle, fontSize: '13px' }} />
+                                                    </div>
+                                                </div>
+
+                                                {/* Test Cases */}
+                                                <div style={{ marginBottom: '16px' }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                                        <label style={{ color: '#fff', fontSize: '13px', fontWeight: '600' }}>Test Cases</label>
+                                                        <button type="button" onClick={addTestCase} style={{ background: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.3)', color: '#fbbf24', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>+ Add</button>
+                                                    </div>
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                                        {testCases.map((tc, index) => (
+                                                            <div key={index} style={{ background: 'rgba(15,23,42,0.6)', borderRadius: '10px', padding: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                                                    <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', fontWeight: '600' }}>Test Case {index + 1}</span>
+                                                                    {testCases.length > 1 && (
+                                                                        <button type="button" onClick={() => removeTestCase(index)} style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '12px', cursor: 'pointer', fontWeight: '600' }}>Remove</button>
+                                                                    )}
+                                                                </div>
+                                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
+                                                                    <div>
+                                                                        <label style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '11px', marginBottom: '4px' }}>Input (optional)</label>
+                                                                        <input value={tc.input} onChange={e => handleTestCaseChange(index, 'input', e.target.value)} placeholder="e.g. 5 10" style={{ ...inputStyle, fontSize: '12px', padding: '6px 10px' }} />
+                                                                    </div>
+                                                                    <div>
+                                                                        <label style={{ display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: '11px', marginBottom: '4px' }}>Expected Output *</label>
+                                                                        <input value={tc.expected_output} onChange={e => handleTestCaseChange(index, 'expected_output', e.target.value)} placeholder="e.g. 15" style={{ ...inputStyle, fontSize: '12px', padding: '6px 10px' }} />
+                                                                    </div>
+                                                                </div>
+                                                                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                                                    <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+                                                                        <input type="checkbox" checked={tc.is_sample} onChange={e => handleTestCaseChange(index, 'is_sample', e.target.checked)} style={{ accentColor: '#fbbf24' }} />
+                                                                        Show as sample
+                                                                    </label>
+                                                                    <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+                                                                        Points:
+                                                                        <input type="number" min="1" value={tc.points} onChange={e => handleTestCaseChange(index, 'points', parseInt(e.target.value))} style={{ ...inputStyle, width: '60px', padding: '4px 8px', fontSize: '12px' }} />
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                <button
+                                                    onClick={handleCreateExercise}
+                                                    disabled={exerciseLoading}
+                                                    style={{ width: '100%', padding: '12px', background: exerciseLoading ? 'rgba(251,191,36,0.4)' : 'linear-gradient(135deg,#fbbf24,#f59e0b)', color: '#0f172a', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: '700', cursor: exerciseLoading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                                                >
+                                                    {exerciseLoading && <div style={{ width: '14px', height: '14px', border: '2px solid #0f172a', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />}
+                                                    {exerciseLoading ? 'Creating...' : '✓ Create Exercise'}
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {/* Exercises List */}
+                                        {classExercises.length === 0 ? (
+                                            <div style={{ textAlign: 'center', padding: '2rem', color: 'rgba(255,255,255,0.4)' }}>
+                                                <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>📭</div>
+                                                <p style={{ fontSize: '14px', margin: 0 }}>No exercises yet. Click "+ Add Exercise" to create one.</p>
+                                            </div>
+                                        ) : (
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                                {classExercises.map(ex => (
+                                                    <div key={ex.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', background: 'rgba(15,23,42,0.4)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                                            <p style={{ color: '#fff', fontWeight: '600', fontSize: '14px', margin: '0 0 4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ex.title}</p>
+                                                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                                <span style={{ fontSize: '11px', color: ex.difficulty === 'easy' ? '#10b981' : ex.difficulty === 'medium' ? '#f59e0b' : '#ef4444', background: ex.difficulty === 'easy' ? 'rgba(16,185,129,0.1)' : ex.difficulty === 'medium' ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)', padding: '2px 8px', borderRadius: '6px', fontWeight: '600', textTransform: 'capitalize' }}>{ex.difficulty}</span>
+                                                                <span style={{ fontSize: '11px', color: '#fbbf24', fontWeight: '600', textTransform: 'uppercase' }}>{ex.language}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div style={{ display: 'flex', gap: '8px', marginLeft: '12px', flexShrink: 0 }}>
+                                                            <button onClick={() => navigate(`/exercise/${ex.id}`)} style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.3)', color: '#3b82f6', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>View</button>
+                                                            <button onClick={() => handleDeleteExercise(ex.id, ex.title)} style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>Delete</button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                 </>
                             )}
                         </div>

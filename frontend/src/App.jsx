@@ -19,6 +19,7 @@ import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import InstructorDashboard from './pages/InstructorDashboard';
 import InstructorClasses from './pages/InstructorClasses';
 import StudentClasses from './pages/StudentClasses';
+import ClassExercises from './pages/ClassExercises';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -288,6 +289,18 @@ function App() {
               <ProtectedRoute>
                 <StudentRoute>
                   <StudentClasses />
+                </StudentRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Class Exercises Route */}
+          <Route
+            path="/class/:class_id/exercises"
+            element={
+              <ProtectedRoute>
+                <StudentRoute>
+                  <ClassExercises />
                 </StudentRoute>
               </ProtectedRoute>
             }

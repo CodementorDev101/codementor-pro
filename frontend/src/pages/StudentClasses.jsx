@@ -259,7 +259,13 @@ const StudentClasses = () => {
                     ) : (
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
                             {activeClasses.map(m => (
-                                <div key={m.membership_id} style={{ background: 'rgba(15,23,42,0.5)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <div
+                                    key={m.membership_id}
+                                    style={{ background: 'rgba(15,23,42,0.5)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '10px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                                    onClick={() => navigate(`/class/${m.class.id}/exercises`)}
+                                    onMouseEnter={(e) => { e.currentTarget.style.border = '1px solid rgba(251,191,36,0.3)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(251,191,36,0.15)'; }}
+                                    onMouseLeave={(e) => { e.currentTarget.style.border = '1px solid rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                                >
                                     <div>
                                         <p style={{ color: '#fff', fontWeight: '700', fontSize: '15px', margin: '0 0 4px' }}>{m.class.name}</p>
                                         {m.class.description && <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', margin: '0 0 8px' }}>{m.class.description}</p>}
@@ -280,7 +286,7 @@ const StudentClasses = () => {
                                             </div>
                                         </div>
                                         <button
-                                            onClick={() => setLeaveTarget(m)}
+                                            onClick={(e) => { e.stopPropagation(); setLeaveTarget(m); }}
                                             style={{ ...btnStyle('#ef4444'), padding: '6px 12px', fontSize: '12px' }}
                                         >
                                             🚪 Leave

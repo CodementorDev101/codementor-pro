@@ -34,6 +34,11 @@ const Exercise = sequelize.define('Exercise', {
   created_by: {
     type: DataTypes.INTEGER,
     allowNull: true
+  },
+  class_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    defaultValue: null
   }
 }, {
   tableName: 'exercises',
