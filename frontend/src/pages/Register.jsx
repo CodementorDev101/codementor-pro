@@ -20,6 +20,210 @@ const EyeIcon = ({ show }) => (
   </svg>
 );
 
+// ─── Terms & Privacy Modal ───────────────────────────────────────────────────
+const MODAL_CONTENT = {
+  terms: {
+    title: 'Terms of Service',
+    sections: [
+      {
+        heading: '1. Acceptance of Terms',
+        body: 'By registering an account on CodeMentor+ Pro, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not register or use the platform.',
+      },
+      {
+        heading: '2. Eligibility',
+        body: 'You must be enrolled in or affiliated with an academic institution to use CodeMentor+ Pro. Students and instructors must provide accurate registration information. Instructors are subject to admin approval before gaining full access.',
+      },
+      {
+        heading: '3. Account Responsibilities',
+        body: 'You are responsible for maintaining the confidentiality of your account credentials. You agree not to share your login information with others. Any activity that occurs under your account is your responsibility. Report unauthorized access to the platform administrators immediately.',
+      },
+      {
+        heading: '4. Acceptable Use',
+        body: 'Users agree to use CodeMentor+ Pro solely for legitimate educational purposes. The following are strictly prohibited: submitting plagiarized code, attempting to bypass the automated grading system, uploading malicious files, harassing other users, and any activity that disrupts platform operations.',
+      },
+      {
+        heading: '5. Code Submissions',
+        body: 'All code submitted through the platform is processed by an automated grading system (Judge0 CE). Submissions are stored in the database for academic record purposes. The platform does not claim ownership of any code you submit.',
+      },
+      {
+        heading: '6. Instructor Verification',
+        body: 'Instructors must upload a valid government-issued or institutional ID during registration. Providing false credentials is grounds for immediate account termination. Admin approval is required before instructor accounts become active.',
+      },
+      {
+        heading: '7. Platform Availability',
+        body: 'CodeMentor+ Pro is provided as a thesis capstone project. While we strive for uptime, we do not guarantee uninterrupted service. The platform may undergo maintenance or updates without prior notice.',
+      },
+      {
+        heading: '8. Modifications',
+        body: 'These Terms of Service may be updated at any time. Continued use of the platform after changes constitutes acceptance of the new terms.',
+      },
+      {
+        heading: '9. Termination',
+        body: 'Accounts that violate these terms may be suspended or permanently terminated by administrators without prior notice.',
+      },
+    ],
+  },
+  privacy: {
+    title: 'Privacy Policy',
+    sections: [
+      {
+        heading: '1. Information We Collect',
+        body: 'When you register, we collect your first name, last name, email address, role (student or instructor), and password (stored as a hashed value). Instructors additionally provide their institution, department, position, employee ID, reason for joining, and a valid ID image.',
+      },
+      {
+        heading: '2. How We Use Your Information',
+        body: 'Your information is used to: create and manage your account, authenticate your identity via JSON Web Tokens (JWT), send transactional emails (welcome, approval, password reset) through SendGrid, display your profile within the platform, and generate anonymized analytics for instructors and administrators.',
+      },
+      {
+        heading: '3. Data Storage',
+        body: 'All data is stored securely in a MySQL database hosted on Railway. Passwords are never stored in plain text — they are hashed using bcrypt before storage. Valid ID images uploaded by instructors are stored as base64-encoded data and are accessible only to platform administrators.',
+      },
+      {
+        heading: '4. Email Communications',
+        body: 'We use SendGrid to send transactional emails. Your email address is used only for account-related communications such as account creation confirmation, instructor approval notifications, and password reset requests. We do not send marketing emails.',
+      },
+      {
+        heading: '5. Code Submissions & Academic Data',
+        body: 'Code submissions, test case results, scores, and submission history are stored in the database. This data is used to compute grades, display your submission history, and generate instructor analytics. This academic data is not shared with third parties.',
+      },
+      {
+        heading: '6. Sharing of Information',
+        body: 'We do not sell, trade, or share your personal information with third parties. Instructor credential information (including uploaded ID) is visible only to platform administrators for verification purposes.',
+      },
+      {
+        heading: '7. Cookies & Local Storage',
+        body: 'CodeMentor+ Pro uses browser local storage to maintain your authentication session via JWT tokens. No third-party tracking cookies are used on this platform.',
+      },
+      {
+        heading: '8. Data Retention',
+        body: 'Your account data is retained for the duration of your account\'s existence on the platform. You may request account deletion by contacting the platform administrator.',
+      },
+      {
+        heading: '9. Security',
+        body: 'We implement industry-standard security practices including password hashing, JWT-based authentication, and HTTPS-secured API communication. However, no system is completely immune to security risks.',
+      },
+      {
+        heading: '10. Contact',
+        body: 'For any privacy-related concerns or data requests, please contact the CodeMentor+ Pro development team at codementorpluspro@gmail.com.',
+      },
+    ],
+  },
+};
+
+const TermsModal = ({ type, onClose }) => {
+  const content = MODAL_CONTENT[type];
+  if (!content) return null;
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 9999,
+        background: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'blur(4px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '20px',
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+          border: '1px solid rgba(251, 191, 36, 0.3)',
+          borderRadius: '20px',
+          width: '100%', maxWidth: '640px',
+          maxHeight: '80vh',
+          display: 'flex', flexDirection: 'column',
+          boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
+        }}
+      >
+        {/* Modal Header */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '24px 28px 20px',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          flexShrink: 0,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '22px' }}>{type === 'terms' ? '📋' : '🔒'}</span>
+            <h2 style={{
+              margin: 0, fontSize: '20px', fontWeight: '700',
+              background: 'linear-gradient(135deg, #fbbf24, #fcd34d)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            }}>
+              {content.title}
+            </h2>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              background: 'rgba(255,255,255,0.08)', border: 'none',
+              borderRadius: '8px', color: 'rgba(255,255,255,0.7)',
+              width: '32px', height: '32px', cursor: 'pointer',
+              fontSize: '18px', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', transition: 'all 0.2s ease',
+              flexShrink: 0,
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Modal Body — scrollable */}
+        <div style={{
+          overflowY: 'auto', padding: '24px 28px 28px',
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(251,191,36,0.3) transparent',
+        }}>
+          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px', marginTop: 0, marginBottom: '20px' }}>
+            Last updated: April 2026 &nbsp;·&nbsp; CodeMentor+ Pro — World Citi Colleges Quezon City
+          </p>
+          {content.sections.map((section, i) => (
+            <div key={i} style={{ marginBottom: '20px' }}>
+              <h3 style={{
+                color: '#fbbf24', fontSize: '14px', fontWeight: '600',
+                marginBottom: '8px', marginTop: 0,
+              }}>
+                {section.heading}
+              </h3>
+              <p style={{
+                color: 'rgba(255,255,255,0.75)', fontSize: '14px',
+                lineHeight: '1.7', margin: 0,
+              }}>
+                {section.body}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Modal Footer */}
+        <div style={{
+          padding: '16px 28px 20px',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
+          flexShrink: 0, textAlign: 'right',
+        }}>
+          <button
+            onClick={onClose}
+            style={{
+              padding: '10px 28px',
+              background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+              color: '#0f172a', border: 'none', borderRadius: '10px',
+              fontSize: '14px', fontWeight: '600', cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 4px 12px rgba(251,191,36,0.3)',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(251,191,36,0.4)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(251,191,36,0.3)'; }}
+          >
+            I Understand
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const Register = () => {
   const [formData, setFormData] = useState({
     email: '', password: '', confirmPassword: '',
@@ -33,6 +237,8 @@ const Register = () => {
   const [idImagePreview, setIdImagePreview] = useState(null);
   const [idImageError, setIdImageError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [openModal, setOpenModal] = useState(null); // 'terms' | 'privacy' | null
   const navigate = useNavigate();
 
   const isInstructor = formData.role === 'instructor';
@@ -78,6 +284,10 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!agreedToTerms) {
+      toast.error('Please read and agree to the Terms of Service and Privacy Policy before registering.');
+      return;
+    }
     if (formData.password !== formData.confirmPassword) { toast.error('Passwords do not match'); return; }
     if (isInstructor) {
       if (!formData.institution || !formData.department || !formData.position || !formData.employeeId || !formData.reason) {
@@ -101,7 +311,7 @@ const Register = () => {
       if (isInstructor) {
         toast.success('Registration submitted! Please wait for admin approval before logging in.', { id: registerToast, duration: 6000 });
         setFormData({ email: '', password: '', confirmPassword: '', firstName: '', lastName: '', role: 'student', institution: '', department: '', position: '', employeeId: '', reason: '' });
-        setIdImageBase64(null); setIdImagePreview(null); return;
+        setIdImageBase64(null); setIdImagePreview(null); setAgreedToTerms(false); return;
       }
       toast.success('Account created successfully! Please sign in.', { id: registerToast });
       navigate('/login');
@@ -129,6 +339,9 @@ const Register = () => {
         textarea::placeholder { color: rgba(255,255,255,0.3); }
         select option { background: #0f172a; color: #ffffff; }
       `}</style>
+
+      {/* Terms / Privacy Modal */}
+      {openModal && <TermsModal type={openModal} onClose={() => setOpenModal(null)} />}
 
       <div style={{
         background: 'rgba(30, 41, 59, 0.8)', backdropFilter: 'blur(20px)',
@@ -258,7 +471,7 @@ const Register = () => {
           </div>
 
           {/* Confirm Password with toggle */}
-          <div style={{ marginBottom: '32px' }}>
+          <div style={{ marginBottom: '24px' }}>
             <label style={labelStyle}>Confirm Password</label>
             <div style={{ position: 'relative' }}>
               <input
@@ -275,6 +488,66 @@ const Register = () => {
               </button>
             </div>
           </div>
+
+          {/* ── Terms & Privacy Checkbox ── */}
+          <div style={{
+            background: 'rgba(15, 23, 42, 0.5)',
+            border: `1px solid ${agreedToTerms ? 'rgba(251,191,36,0.4)' : 'rgba(255,255,255,0.1)'}`,
+            borderRadius: '12px', padding: '16px 18px',
+            marginBottom: '28px',
+            transition: 'border-color 0.3s ease',
+          }}>
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
+              {/* Custom checkbox */}
+              <div
+                onClick={() => setAgreedToTerms(!agreedToTerms)}
+                style={{
+                  width: '20px', height: '20px', borderRadius: '5px', flexShrink: 0,
+                  marginTop: '1px',
+                  border: `2px solid ${agreedToTerms ? '#fbbf24' : 'rgba(255,255,255,0.3)'}`,
+                  background: agreedToTerms ? 'linear-gradient(135deg, #fbbf24, #f59e0b)' : 'rgba(15,23,42,0.6)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'all 0.2s ease', cursor: 'pointer',
+                }}
+              >
+                {agreedToTerms && (
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 6l3 3 5-5" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </div>
+              <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: '14px', lineHeight: '1.6' }}>
+                I have read and agree to the{' '}
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setOpenModal('terms'); }}
+                  style={{
+                    background: 'none', border: 'none', padding: 0,
+                    color: '#fbbf24', fontWeight: '600', fontSize: '14px',
+                    cursor: 'pointer', textDecoration: 'underline',
+                    textUnderlineOffset: '3px',
+                  }}
+                >
+                  Terms of Service
+                </button>
+                {' '}and{' '}
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setOpenModal('privacy'); }}
+                  style={{
+                    background: 'none', border: 'none', padding: 0,
+                    color: '#fbbf24', fontWeight: '600', fontSize: '14px',
+                    cursor: 'pointer', textDecoration: 'underline',
+                    textUnderlineOffset: '3px',
+                  }}
+                >
+                  Privacy Policy
+                </button>
+                {' '}of CodeMentor+ Pro.
+              </span>
+            </label>
+          </div>
+          {/* ── End Terms & Privacy Checkbox ── */}
 
           {/* Submit */}
           <button type="submit" disabled={loading} style={{ width: '100%', padding: '16px', background: loading ? 'rgba(251, 191, 36, 0.5)' : 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)', color: '#0f172a', border: 'none', borderRadius: '12px', fontSize: '16px', fontWeight: '600', cursor: loading ? 'not-allowed' : 'pointer', transition: 'all 0.3s ease', boxShadow: '0 4px 12px rgba(251, 191, 36, 0.3)', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
