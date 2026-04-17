@@ -445,37 +445,70 @@ const Dashboard = () => {
 
           {/* Instructor Dashboard Button */}
           <div style={{ marginBottom: '48px' }}>
-            <button
-              onClick={() => navigate('/instructor-dashboard')}
-              style={{
-                width: '100%',
-                padding: '16px 24px',
-                fontSize: '16px',
-                fontWeight: '600',
-                color: '#ffffff',
-                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                border: 'none',
-                borderRadius: '12px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
-              }}
-            >
-              <span>👨‍🏫</span>
-              <span>Instructor Dashboard</span>
-            </button>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <button
+                onClick={() => navigate('/instructor-dashboard')}
+                style={{
+                  width: '100%',
+                  padding: '16px 24px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  color: '#ffffff',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+                }}
+              >
+                <span>👨‍🏫</span>
+                <span>Instructor Dashboard</span>
+              </button>
+              <button
+                onClick={() => navigate('/instructor-classes')}
+                style={{
+                  width: '100%',
+                  padding: '16px 24px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  color: '#ffffff',
+                  background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = '0 6px 20px rgba(59, 130, 246, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
+                }}
+              >
+                <span>🏫</span>
+                <span>My Classes</span>
+              </button>
+            </div>
           </div>
         </>
       );
@@ -843,6 +876,64 @@ const Dashboard = () => {
                   }}
                 >
                   📝 My Submissions
+                </button>
+              )}
+
+              {/* My Classes Button (Student Only) */}
+              {user?.role === 'student' && (
+                <button
+                  onClick={() => navigate('/my-classes')}
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#ffffff',
+                    background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 6px 20px rgba(59, 130, 246, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
+                  }}
+                >
+                  🏫 My Classes
+                </button>
+              )}
+
+              {/* My Classes Button (Instructor Only) */}
+              {user?.role === 'instructor' && (
+                <button
+                  onClick={() => navigate('/instructor-classes')}
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#ffffff',
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+                  }}
+                >
+                  🏫 My Classes
                 </button>
               )}
 

@@ -17,6 +17,8 @@ import Profile from './pages/Profile';
 import AdminUserManagement from './pages/AdminUserManagement';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import InstructorDashboard from './pages/InstructorDashboard';
+import InstructorClasses from './pages/InstructorClasses';
+import StudentClasses from './pages/StudentClasses';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -263,6 +265,30 @@ function App() {
                 <InstructorRoute>
                   <InstructorDashboard />
                 </InstructorRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Instructor Classes Route */}
+          <Route
+            path="/instructor-classes"
+            element={
+              <ProtectedRoute>
+                <InstructorRoute>
+                  <InstructorClasses />
+                </InstructorRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Student Classes Route */}
+          <Route
+            path="/my-classes"
+            element={
+              <ProtectedRoute>
+                <StudentRoute>
+                  <StudentClasses />
+                </StudentRoute>
               </ProtectedRoute>
             }
           />

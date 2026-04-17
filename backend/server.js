@@ -14,6 +14,7 @@ const statsRoutes = require('./routes/statsRoutes');
 const userManagementRoutes = require('./routes/userManagementRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const instructorAnalyticsRoutes = require('./routes/instructorAnalyticsRoutes');
+const classRoutes = require('./routes/classRoutes');
 
 // Initialize Express app
 const app = express();
@@ -55,6 +56,7 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/admin/users', userManagementRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/instructor-analytics', instructorAnalyticsRoutes);
+app.use('/api/classes', classRoutes);
 
 // 404 handler
 app.use((req, res) => {
