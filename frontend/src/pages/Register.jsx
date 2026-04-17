@@ -103,7 +103,11 @@ const MODAL_CONTENT = {
         body: 'We implement industry-standard security practices including password hashing, JWT-based authentication, and HTTPS-secured API communication. However, no system is completely immune to security risks.',
       },
       {
-        heading: '10. Contact',
+        heading: '10. Philippine Data Privacy Act of 2012 (RA 10173)',
+        body: 'CodeMentor+ Pro recognizes and complies with the Philippine Data Privacy Act of 2012 (Republic Act No. 10173) and its Implementing Rules and Regulations. As a platform operating under Philippine jurisdiction, we are committed to protecting the privacy and security of your personal data. You have the right to be informed about how your data is collected and used, the right to access your personal data stored on the platform, the right to correct inaccurate or outdated information, the right to erasure or blocking of your personal data under lawful grounds, and the right to lodge a complaint with the National Privacy Commission (NPC) at www.privacy.gov.ph if you believe your data privacy rights have been violated.',
+      },
+      {
+        heading: '11. Contact',
         body: 'For any privacy-related concerns or data requests, please contact the CodeMentor+ Pro development team at codementorpluspro@gmail.com.',
       },
     ],
@@ -176,7 +180,7 @@ const TermsModal = ({ type, onClose }) => {
           scrollbarColor: 'rgba(251,191,36,0.3) transparent',
         }}>
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px', marginTop: 0, marginBottom: '20px' }}>
-            Last updated: April 2026 &nbsp;·&nbsp; CodeMentor+ Pro — World Citi Colleges Quezon City
+            Last updated: April 2026 &nbsp;·&nbsp; CodeMentor+ Pro
           </p>
           {content.sections.map((section, i) => (
             <div key={i} style={{ marginBottom: '20px' }}>
