@@ -965,14 +965,14 @@ const Dashboard = () => {
                   fontSize: '14px',
                   fontWeight: '500',
                   color: '#ffffff',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: 'rgba(239, 68, 68, 0.15)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
                   borderRadius: '8px',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease'
                 }}
-                onMouseEnter={(e) => { e.target.style.background = 'rgba(255, 255, 255, 0.15)'; }}
-                onMouseLeave={(e) => { e.target.style.background = 'rgba(255, 255, 255, 0.1)'; }}
+                onMouseEnter={(e) => { e.target.style.background = 'rgba(239, 68, 68, 0.25)'; }}
+                onMouseLeave={(e) => { e.target.style.background = 'rgba(239, 68, 68, 0.15)'; }}
               >
                 Logout
               </button>
