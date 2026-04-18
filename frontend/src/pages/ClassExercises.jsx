@@ -76,22 +76,53 @@ const ClassExercises = () => {
       `}</style>
 
             {/* Navbar */}
-            <nav style={{ background: 'rgba(30,41,59,0.8)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100 }}>
+            <nav style={{ background: 'rgba(30,41,59,0.8)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '0 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100, height: '64px' }}>
                 <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', background: 'linear-gradient(to right, #fbbf24, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
                     CodeMentor+ Pro
                 </h1>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <span style={{ background: 'linear-gradient(135deg,#3b82f6,#2563eb)', color: '#fff', padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: '600' }}>student</span>
-                    <button onClick={() => navigate('/my-classes')} style={{ background: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.3)', color: '#fbbf24', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.875rem', fontWeight: '600' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {/* User info card */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 14px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
+                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg,#fbbf24,#f59e0b)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 'bold', color: '#0f172a', flexShrink: 0 }}>
+                            {JSON.parse(localStorage.getItem('user'))?.first_name?.charAt(0)}{JSON.parse(localStorage.getItem('user'))?.last_name?.charAt(0)}
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.2' }}>
+                            <span style={{ color: '#fff', fontSize: '13px', fontWeight: '600' }}>
+                                {JSON.parse(localStorage.getItem('user'))?.first_name} {JSON.parse(localStorage.getItem('user'))?.last_name}
+                            </span>
+                            <span style={{ color: '#fbbf24', fontSize: '11px', fontWeight: '500' }}>Student</span>
+                        </div>
+                    </div>
+
+                    <button onClick={() => navigate('/my-classes')}
+                        style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#fff', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                    >
                         ← My Classes
                     </button>
-                    <button onClick={() => navigate('/dashboard')} style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.3)', color: '#3b82f6', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.875rem', fontWeight: '600' }}>
+
+                    <button onClick={() => navigate('/dashboard')}
+                        style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#fff', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                    >
                         🏠 Dashboard
                     </button>
-                    <button onClick={() => navigate('/profile')} style={{ background: 'rgba(168,85,247,0.15)', border: '1px solid rgba(168,85,247,0.3)', color: '#a855f7', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.875rem', fontWeight: '600' }}>
-                        Profile
+
+                    <button onClick={() => navigate('/profile')}
+                        style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#fff', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                    >
+                        👤 Profile
                     </button>
-                    <button onClick={handleLogout} style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.875rem', fontWeight: '600' }}>
+
+                    <button onClick={handleLogout}
+                        style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#fff', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239,68,68,0.25)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(239,68,68,0.15)'}
+                    >
                         Logout
                     </button>
                 </div>
