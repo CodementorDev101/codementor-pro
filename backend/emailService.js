@@ -14,7 +14,7 @@ const sendWelcomeEmail = async (toEmail, name) => {
         <p>Hi <strong>${name}</strong>,</p>
         <p>Your account has been successfully created. You can now log in and start your programming journey.</p>
         <a href="https://codementorpro.codes/login" style="display:inline-block; margin-top:20px; padding:12px 24px; background:#f59e0b; color:#0f172a; border-radius:8px; text-decoration:none; font-weight:bold;">Go to Login</a>
-        <p style="margin-top:30px; font-size:12px; color:#94a3b8;">CodeMentor+ Pro &mdash; World Citi Colleges QC</p>
+        <p style="margin-top:30px; font-size:12px; color:#94a3b8;">CodeMentor+ Pro</p>
       </div>
     `,
   });
@@ -33,7 +33,7 @@ const sendApprovalEmail = async (toEmail, name) => {
         <p>Your instructor account on CodeMentor+ Pro has been reviewed and <strong style="color:#4ade80;">approved</strong> by the admin.</p>
         <p>You can now log in and start creating exercises for your students.</p>
         <a href="https://codementorpro.codes/login" style="display:inline-block; margin-top:20px; padding:12px 24px; background:#f59e0b; color:#0f172a; border-radius:8px; text-decoration:none; font-weight:bold;">Go to Login</a>
-        <p style="margin-top:30px; font-size:12px; color:#94a3b8;">CodeMentor+ Pro &mdash; World Citi Colleges QC</p>
+        <p style="margin-top:30px; font-size:12px; color:#94a3b8;">CodeMentor+ Pro</p>
       </div>
     `,
   });
@@ -53,7 +53,7 @@ const sendPasswordResetEmail = async (toEmail, name, resetToken) => {
         <p>We received a request to reset your password. Click the button below to set a new one:</p>
         <a href="${resetLink}" style="display:inline-block; margin-top:20px; padding:12px 24px; background:#f59e0b; color:#0f172a; border-radius:8px; text-decoration:none; font-weight:bold;">Reset My Password</a>
         <p style="margin-top:20px; color:#94a3b8;">This link expires in <strong style="color:#ffffff;">1 hour</strong>. If you did not request this, ignore this email.</p>
-        <p style="margin-top:30px; font-size:12px; color:#94a3b8;">CodeMentor+ Pro &mdash; World Citi Colleges QC</p>
+        <p style="margin-top:30px; font-size:12px; color:#94a3b8;">CodeMentor+ Pro</p>
       </div>
     `,
   });
