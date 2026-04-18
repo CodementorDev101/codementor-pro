@@ -5,11 +5,11 @@ const JUDGE0_API_KEY = 'aaba4bd61fmshfc98e06b6159b9bp12247ajsna98efb39cf6f';
 
 // Language ID mapping for Judge0 API
 const languageIdMap = {
-  'python': 71,
-  'javascript': 63,
-  'java': 62,
-  'cpp': 54,
-  'c': 50
+  'python': 92,
+  'javascript': 93,
+  'java': 91,
+  'cpp': 105,
+  'c': 103
 };
 
 /**
