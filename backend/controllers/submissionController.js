@@ -59,7 +59,10 @@ const submitCode = async (req, res) => {
       // Compare output
       const actualOutput = executionResult.stdout.trim();
       const expectedOutput = testCase.expected_output.trim();
-      const passed = actualOutput === expectedOutput;
+      const stderr = executionResult.stderr ? executionResult.stderr.trim() : '';
+      const compileOutput = executionResult.compile_output ? executionResult.compile_output.trim() : '';
+      const hasError = stderr.length > 0 || compileOutput.length > 0;
+      const passed = actualOutput === expectedOutput && !hasError;
 
       if (!passed) {
         allPassed = false;
@@ -71,7 +74,7 @@ const submitCode = async (req, res) => {
       await SubmissionResult.create({
         submission_id: submission.id,
         test_case_id: testCase.id,
-        status: passed ? 'accepted' : 'wrong_answer',
+        status: passed ? 'accepted' : (hasError ? 'runtime_error' : 'wrong_answer'),
         output: actualOutput,
         execution_time: executionResult.execution_time,
         memory_used: executionResult.memory_used
@@ -83,6 +86,8 @@ const submitCode = async (req, res) => {
         input: testCase.is_sample ? testCase.input : '[Hidden]',
         expected_output: testCase.is_sample ? expectedOutput : '[Hidden]',
         actual_output: actualOutput,
+        stderr: stderr,
+        compile_output: compileOutput,
         is_sample: testCase.is_sample
       });
     }
@@ -149,11 +154,11 @@ const getUserSubmissions = async (req, res) => {
     // Format submissions for frontend compatibility
     const formattedSubmissions = submissions.map(sub => {
       const subData = sub.toJSON();
-      
+
       // Calculate test case counts
       const passedCount = subData.results ? subData.results.filter(r => r.status === 'accepted').length : 0;
       const totalCount = subData.results ? subData.results.length : 0;
-      
+
       return {
         id: subData.id,
         user_id: subData.user_id,
@@ -228,7 +233,7 @@ const getSubmissionById = async (req, res) => {
 
     // Format submission for frontend compatibility
     const subData = submission.toJSON();
-    
+
     // Format results with proper structure
     const formattedResults = subData.results.map(result => ({
       passed: result.status === 'accepted',

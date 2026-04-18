@@ -24,7 +24,7 @@ const ExerciseDetail = () => {
       const response = await exerciseAPI.getById(id);
       const exerciseData = response.data.data.exercise;
       setExercise(exerciseData);
-      
+
       // Set default code template based on language
       setCode(getDefaultCode(exerciseData.language));
     } catch (error) {
@@ -54,7 +54,7 @@ const ExerciseDetail = () => {
 
     setSubmitting(true);
     setResult(null);
-    
+
     const submitToast = toast.loading('Running your code against test cases...');
 
     try {
@@ -247,18 +247,18 @@ const ExerciseDetail = () => {
                 background: exercise.difficulty === 'easy'
                   ? 'rgba(34, 197, 94, 0.2)'
                   : exercise.difficulty === 'medium'
-                  ? 'rgba(251, 191, 36, 0.2)'
-                  : 'rgba(239, 68, 68, 0.2)',
+                    ? 'rgba(251, 191, 36, 0.2)'
+                    : 'rgba(239, 68, 68, 0.2)',
                 color: exercise.difficulty === 'easy'
                   ? '#22c55e'
                   : exercise.difficulty === 'medium'
-                  ? '#fbbf24'
-                  : '#ef4444',
+                    ? '#fbbf24'
+                    : '#ef4444',
                 border: exercise.difficulty === 'easy'
                   ? '1px solid rgba(34, 197, 94, 0.3)'
                   : exercise.difficulty === 'medium'
-                  ? '1px solid rgba(251, 191, 36, 0.3)'
-                  : '1px solid rgba(239, 68, 68, 0.3)'
+                    ? '1px solid rgba(251, 191, 36, 0.3)'
+                    : '1px solid rgba(239, 68, 68, 0.3)'
               }}>
                 {exercise.difficulty.charAt(0).toUpperCase() + exercise.difficulty.slice(1)}
               </span>
@@ -497,9 +497,9 @@ const ExerciseDetail = () => {
                   }}>
                     Status:{' '}
                     <span style={{
-                      color: result.status === 'accepted' ? '#22c55e' : '#ef4444'
+                      color: result.status === 'accepted' ? '#22c55e' : result.status === 'runtime_error' ? '#f59e0b' : '#ef4444'
                     }}>
-                      {result.status === 'accepted' ? 'Accepted ✓' : 'Wrong Answer ✗'}
+                      {result.status === 'accepted' ? 'Accepted ✓' : result.status === 'runtime_error' ? 'Runtime Error ⚠️' : 'Wrong Answer ✗'}
                     </span>
                   </p>
                   <p style={{
@@ -548,10 +548,34 @@ const ExerciseDetail = () => {
                             <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '4px' }}>
                               Expected: {testResult.expected_output}
                             </p>
-                            <p style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                              Your Output: {testResult.actual_output}
+                            <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '4px' }}>
+                              Your Output: {testResult.actual_output || '(no output)'}
                             </p>
                           </>
+                        )}
+
+                        {/* Compile Error */}
+                        {testResult.compile_output && testResult.compile_output.length > 0 && (
+                          <div style={{ marginTop: '10px', padding: '12px', background: 'rgba(239,68,68,0.08)', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.25)' }}>
+                            <p style={{ color: '#ef4444', fontWeight: '600', fontSize: '13px', marginBottom: '6px' }}>
+                              🔴 Compile Error
+                            </p>
+                            <pre style={{ color: 'rgba(255,100,100,0.9)', fontSize: '12px', fontFamily: 'monospace', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0, lineHeight: '1.6' }}>
+                              {testResult.compile_output}
+                            </pre>
+                          </div>
+                        )}
+
+                        {/* Runtime Error / Stderr */}
+                        {testResult.stderr && testResult.stderr.length > 0 && !testResult.compile_output && (
+                          <div style={{ marginTop: '10px', padding: '12px', background: 'rgba(245,158,11,0.08)', borderRadius: '8px', border: '1px solid rgba(245,158,11,0.25)' }}>
+                            <p style={{ color: '#f59e0b', fontWeight: '600', fontSize: '13px', marginBottom: '6px' }}>
+                              ⚠️ Runtime Error
+                            </p>
+                            <pre style={{ color: 'rgba(255,200,100,0.9)', fontSize: '12px', fontFamily: 'monospace', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0, lineHeight: '1.6' }}>
+                              {testResult.stderr}
+                            </pre>
+                          </div>
                         )}
                       </div>
                     ))}
