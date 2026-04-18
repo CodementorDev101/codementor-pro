@@ -140,13 +140,14 @@ const InstructorDashboard = () => {
         background: 'rgba(30, 41, 59, 0.8)',
         backdropFilter: 'blur(20px)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        padding: '1rem 2rem',
+        padding: '0 2rem',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         position: 'sticky',
         top: 0,
-        zIndex: 100
+        zIndex: 100,
+        height: '64px'
       }}>
         <h1 style={{
           fontSize: '1.5rem',
@@ -159,86 +160,45 @@ const InstructorDashboard = () => {
           CodeMentor+ Pro
         </h1>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <span style={{ color: '#fff', fontSize: '0.9rem' }}>
-            {user?.name}
-          </span>
-          <span style={{
-            background: 'linear-gradient(135deg, #10b981, #059669)',
-            color: 'white',
-            padding: '0.25rem 0.75rem',
-            borderRadius: '9999px',
-            fontSize: '0.75rem',
-            fontWeight: '600'
-          }}>
-            instructor
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* User info card */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 14px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #10b981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>
+              {user?.first_name?.charAt(0)}{user?.last_name?.charAt(0)}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.2' }}>
+              <span style={{ color: '#ffffff', fontSize: '13px', fontWeight: '600' }}>
+                {user?.first_name} {user?.last_name}
+              </span>
+              <span style={{ color: '#10b981', fontSize: '11px', fontWeight: '500', textTransform: 'capitalize' }}>
+                Instructor
+              </span>
+            </div>
+          </div>
+
           <button
             onClick={() => navigate('/dashboard')}
-            style={{
-              background: 'rgba(59, 130, 246, 0.2)',
-              border: '1px solid rgba(59, 130, 246, 0.3)',
-              color: '#3b82f6',
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseOver={(e) => {
-              e.target.style.background = 'rgba(59, 130, 246, 0.3)';
-              e.target.style.transform = 'translateY(-2px)';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.background = 'rgba(59, 130, 246, 0.2)';
-              e.target.style.transform = 'translateY(0)';
-            }}
+            style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#ffffff', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
           >
             📊 Dashboard
           </button>
+
           <button
             onClick={() => navigate('/profile')}
-            style={{
-              background: 'rgba(251, 191, 36, 0.2)',
-              border: '1px solid rgba(251, 191, 36, 0.3)',
-              color: '#fbbf24',
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseOver={(e) => {
-              e.target.style.background = 'rgba(251, 191, 36, 0.3)';
-              e.target.style.transform = 'translateY(-2px)';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.background = 'rgba(251, 191, 36, 0.2)';
-              e.target.style.transform = 'translateY(0)';
-            }}
+            style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#ffffff', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
           >
-            Profile
+            👤 Profile
           </button>
+
           <button
             onClick={handleLogout}
-            style={{
-              background: 'rgba(239, 68, 68, 0.2)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              color: '#ef4444',
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseOver={(e) => {
-              e.target.style.background = 'rgba(239, 68, 68, 0.3)';
-              e.target.style.transform = 'translateY(-2px)';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.background = 'rgba(239, 68, 68, 0.2)';
-              e.target.style.transform = 'translateY(0)';
-            }}
+            style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#ffffff', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239,68,68,0.25)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(239,68,68,0.15)'}
           >
             Logout
           </button>
@@ -282,14 +242,14 @@ const InstructorDashboard = () => {
             transition: 'all 0.3s ease',
             cursor: 'pointer'
           }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 20px 40px rgba(251, 191, 36, 0.3)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}>
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.boxShadow = '0 20px 40px rgba(251, 191, 36, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}>
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📚</div>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#fbbf24', marginBottom: '0.25rem' }}>
               {stats?.totalExercises || 0}
@@ -309,14 +269,14 @@ const InstructorDashboard = () => {
             transition: 'all 0.3s ease',
             cursor: 'pointer'
           }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 20px 40px rgba(59, 130, 246, 0.3)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}>
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.boxShadow = '0 20px 40px rgba(59, 130, 246, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}>
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📝</div>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3b82f6', marginBottom: '0.25rem' }}>
               {stats?.totalSubmissions || 0}
@@ -336,14 +296,14 @@ const InstructorDashboard = () => {
             transition: 'all 0.3s ease',
             cursor: 'pointer'
           }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 20px 40px rgba(16, 185, 129, 0.3)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}>
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.boxShadow = '0 20px 40px rgba(16, 185, 129, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}>
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎯</div>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981', marginBottom: '0.25rem' }}>
               {stats?.successRate || 0}%
@@ -363,14 +323,14 @@ const InstructorDashboard = () => {
             transition: 'all 0.3s ease',
             cursor: 'pointer'
           }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 20px 40px rgba(168, 85, 247, 0.3)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}>
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.boxShadow = '0 20px 40px rgba(168, 85, 247, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}>
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⭐</div>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#a855f7', marginBottom: '0.25rem' }}>
               {stats?.averageScore || 0}
@@ -390,14 +350,14 @@ const InstructorDashboard = () => {
             transition: 'all 0.3s ease',
             cursor: 'pointer'
           }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-8px)';
-            e.currentTarget.style.boxShadow = '0 20px 40px rgba(236, 72, 153, 0.3)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}>
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.boxShadow = '0 20px 40px rgba(236, 72, 153, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}>
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👥</div>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ec4899', marginBottom: '0.25rem' }}>
               {stats?.uniqueStudents || 0}
