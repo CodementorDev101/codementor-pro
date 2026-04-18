@@ -786,193 +786,82 @@ const Dashboard = () => {
             </div>
 
             {/* Right side - User info & buttons */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              {/* Polished User Info Card */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '6px 14px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: '12px',
-              }}>
-                <div style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '13px',
-                  fontWeight: 'bold',
-                  color: '#0f172a',
-                  flexShrink: 0
-                }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              {/* User Info Card */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 14px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 'bold', color: '#0f172a', flexShrink: 0 }}>
                   {user?.first_name?.charAt(0)}{user?.last_name?.charAt(0)}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.2' }}>
-                  <span style={{ color: '#ffffff', fontSize: '13px', fontWeight: '600' }}>
-                    {user?.first_name} {user?.last_name}
-                  </span>
-                  <span style={{ color: '#fbbf24', fontSize: '11px', fontWeight: '500', textTransform: 'capitalize' }}>
-                    {user?.role}
-                  </span>
+                  <span style={{ color: '#ffffff', fontSize: '13px', fontWeight: '600' }}>{user?.first_name} {user?.last_name}</span>
+                  <span style={{ color: '#fbbf24', fontSize: '11px', fontWeight: '500', textTransform: 'capitalize' }}>{user?.role}</span>
                 </div>
               </div>
 
+              {/* Create Exercise (Instructor/Admin) */}
               {(user?.role === 'instructor' || user?.role === 'admin') && (
                 <button
                   onClick={() => navigate('/create-exercise')}
-                  style={{
-                    padding: '8px 16px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: '#0f172a',
-                    background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 12px rgba(251, 191, 36, 0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 6px 20px rgba(251, 191, 36, 0.4)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 4px 12px rgba(251, 191, 36, 0.3)';
-                  }}
+                  style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#ffffff', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
                 >
                   + Create Exercise
                 </button>
               )}
 
-              {/* My Submissions Button (Student Only) */}
+              {/* My Submissions (Student) */}
               {user?.role === 'student' && (
                 <button
                   onClick={() => navigate('/submissions')}
-                  style={{
-                    padding: '8px 16px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: '#0f172a',
-                    background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 12px rgba(251, 191, 36, 0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 6px 20px rgba(251, 191, 36, 0.4)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 4px 12px rgba(251, 191, 36, 0.3)';
-                  }}
+                  style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#ffffff', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
                 >
                   📝 My Submissions
                 </button>
               )}
 
-              {/* My Classes Button (Student Only) */}
+              {/* My Classes (Student) */}
               {user?.role === 'student' && (
                 <button
                   onClick={() => navigate('/my-classes')}
-                  style={{
-                    padding: '8px 16px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: '#ffffff',
-                    background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 6px 20px rgba(59, 130, 246, 0.4)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
-                  }}
+                  style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#ffffff', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
                 >
                   🏫 My Classes
                 </button>
               )}
 
-              {/* My Classes Button (Instructor Only) */}
+              {/* My Classes (Instructor) */}
               {user?.role === 'instructor' && (
                 <button
                   onClick={() => navigate('/instructor-classes')}
-                  style={{
-                    padding: '8px 16px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: '#ffffff',
-                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
-                  }}
+                  style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#ffffff', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
                 >
                   🏫 My Classes
                 </button>
               )}
 
-              {/* Profile Button */}
+              {/* Profile */}
               <button
                 onClick={() => navigate('/profile')}
-                style={{
-                  padding: '8px 16px',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  color: '#ffffff',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => { e.target.style.background = 'rgba(255, 255, 255, 0.15)'; }}
-                onMouseLeave={(e) => { e.target.style.background = 'rgba(255, 255, 255, 0.1)'; }}
+                style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#ffffff', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
               >
                 👤 Profile
               </button>
 
-              {/* Logout Button */}
+              {/* Logout */}
               <button
                 onClick={handleLogout}
-                style={{
-                  padding: '8px 16px',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  color: '#ffffff',
-                  background: 'rgba(239, 68, 68, 0.15)',
-                  border: '1px solid rgba(239, 68, 68, 0.3)',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => { e.target.style.background = 'rgba(239, 68, 68, 0.25)'; }}
-                onMouseLeave={(e) => { e.target.style.background = 'rgba(239, 68, 68, 0.15)'; }}
+                style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', color: '#ffffff', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239,68,68,0.25)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(239,68,68,0.15)'}
               >
                 Logout
               </button>
