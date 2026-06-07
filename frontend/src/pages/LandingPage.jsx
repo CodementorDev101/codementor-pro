@@ -398,21 +398,50 @@ const LandingPage = () => {
 
   if (loading) {
     return (
-      <div style={styles.loadingScreen}>
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(135deg, #0f172a 0%, #1a2744 40%, #2a1a4e 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 9999, overflow: 'hidden', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
         <style>{`
-          @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
           @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+          @keyframes goldPulse { 0%, 100% { filter: drop-shadow(0 0 6px rgba(251,191,36,0.4)); } 50% { filter: drop-shadow(0 0 18px rgba(251,191,36,0.9)); } }
+          @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+          @keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+          @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+          @keyframes termLine { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+          @keyframes orbFloat { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.15); opacity: 1; } }
         `}</style>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '24px', animation: 'pulse 1.5s ease-in-out infinite' }}>
-          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" style={{ filter: 'drop-shadow(0 0 8px rgba(251,191,36,0.6))' }}>
+
+        {/* Background glow orb */}
+        <div style={{ position: 'absolute', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 70%)', borderRadius: '50%', pointerEvents: 'none', animation: 'orbFloat 3s ease-in-out infinite' }} />
+
+        {/* Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px', animation: 'fadeInUp 0.7s ease-out forwards', zIndex: 1 }}>
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" style={{ animation: 'goldPulse 2s ease-in-out infinite', flexShrink: 0 }}>
             <path d="M8 5 L3 12 L8 19" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M16 5 L21 12 L16 19" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             <line x1="12" y1="8" x2="12" y2="16" stroke="white" strokeWidth="2" strokeLinecap="round" />
             <line x1="8.5" y1="12" x2="15.5" y2="12" stroke="white" strokeWidth="2" strokeLinecap="round" />
           </svg>
-          <div style={styles.loadingLogo}>CodeMentor<span style={{ color: '#FBBF24' }}> + Pro</span></div>
+          <div style={{ fontSize: '38px', fontWeight: 'bold', color: 'white', letterSpacing: '-0.5px' }}>
+            CodeMentor<span style={{ color: '#FBBF24' }}> + Pro</span>
+          </div>
         </div>
-        <div style={styles.loadingSpinner} />
+
+        {/* Terminal lines */}
+        <div style={{ marginBottom: '36px', zIndex: 1, animation: 'fadeInUp 0.7s ease-out 0.2s both' }}>
+          {[
+            { text: '> Initializing workspace...', delay: '0.4s', color: 'rgba(255,255,255,0.5)' },
+            { text: '> Loading code execution engine...', delay: '0.8s', color: 'rgba(255,255,255,0.5)' },
+            { text: '> Ready.', delay: '1.2s', color: '#FBBF24' },
+          ].map((line, i) => (
+            <div key={i} style={{ fontFamily: 'monospace', fontSize: '13px', color: line.color, marginBottom: '6px', opacity: 0, animation: `termLine 0.4s ease-out ${line.delay} forwards`, letterSpacing: '0.3px' }}>
+              {line.text}{i === 2 && <span style={{ animation: 'blink 1s infinite', marginLeft: '2px' }}>▊</span>}
+            </div>
+          ))}
+        </div>
+
+        {/* Progress bar */}
+        <div style={{ width: '280px', height: '3px', background: 'rgba(255,255,255,0.08)', borderRadius: '2px', overflow: 'hidden', zIndex: 1 }}>
+          <div style={{ height: '100%', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', borderRadius: '2px', animation: 'fillBar 2s cubic-bezier(0.4, 0, 0.2, 1) forwards', boxShadow: '0 0 8px rgba(251,191,36,0.6)' }} />
+        </div>
       </div>
     );
   }
